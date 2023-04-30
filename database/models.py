@@ -9,11 +9,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-my_id = os.getenv('ID')
-key = os.getenv('SECRET_KEY')
-database_name = os.getenv('DATABASE_NAME')
-database_url = os.getenv('DATABASE_URL')
-database_path = 'postgresql://{}:{}@{}/{}'.format(my_id,key,database_url,database_name)
+# my_id = os.getenv('ID')
+# key = os.getenv('SECRET_KEY')
+# database_name = os.getenv('DATABASE_NAME')
+# database_url = os.getenv('DATABASE_URL')
+database_path = os.getenv('DATABASE_URL')
 
 db = SQLAlchemy()
 
