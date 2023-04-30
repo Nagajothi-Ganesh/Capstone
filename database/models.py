@@ -11,8 +11,9 @@ load_dotenv()
 
 my_id = os.getenv('ID')
 key = os.getenv('SECRET_KEY')
-database_name = 'agency_rvq8'
-database_path = 'postgresql://{}:{}@{}/{}'.format(my_id,key,'localhost:5432', database_name)
+database_name = os.getenv('DATABASE_NAME')
+database_url = os.getenv('DATABASE_URL')
+database_path = 'postgresql://{}:{}@{}/{}'.format(my_id,key,database_url,database_name)
 
 db = SQLAlchemy()
 
