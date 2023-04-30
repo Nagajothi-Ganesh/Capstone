@@ -9,8 +9,8 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 
-from .database.models import setup_db, Movie, Actor, Movie_actor
-from .auth.auth import AuthError, requires_auth
+from database.models import setup_db, Movie, Actor, Movie_actor
+from auth.auth import AuthError, requires_auth
 
 MOVIES_PER_PAGE = 10
 
