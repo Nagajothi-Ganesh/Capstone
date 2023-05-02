@@ -297,7 +297,7 @@ def movie_actor(payload):
         print(error)
         abort(400)
 
-"""x
+"""
 Error handlers for all expected errors
 including 404 and 422.
 """
