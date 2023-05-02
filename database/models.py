@@ -49,7 +49,6 @@ class crudmethods(db.Model):
 """
 Movie_actor
 """
-@dataclass
 class Movie_actor(crudmethods):
     __tablename__ = "movie_actor"
     id = db.Column(db.Integer, primary_key=True)
@@ -93,7 +92,6 @@ class Movie(crudmethods):
     title = db.Column(db.String(), nullable=False)
     release_date = db.Column(db.Date)
     movie_actor = db.relationship('Movie_actor', backref='movie_parent', lazy=True)
-  
     def __init__(self, title, release_date):
         self.title = title
         self.release_date = release_date
