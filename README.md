@@ -5,13 +5,14 @@
 Flimopedia is a casting agency that is responsible for creating movies and managing and assigning actors to those movies. This app is used to maintain the data of movies and the actors.
 
 Roles:
-Casting Assistant - Can view actors and movies
+Any one or Casting Assistant - Can view actors and movies
 Casting Director - All permissions a Casting Assistant has and Add or delete an actor from the database, Modify actors or movies
 Executive Producer - All permissions a Casting Director has and Add or delete a movie from the database
 
 ### Getting Started
-- Base URL: At present this app can only be run locally and is not hosted as a base URL. The backend app is hosted at the default, `http://127.0.0.1:5000/`, which is set as a proxy in the frontend configuration. 
-- Authentication: This version of the application does not require authentication or API keys. 
+- Base URL: This app is hosted in render and below is the URL.
+https://capstone170204.us.auth0.com/authorize?audience=MovieActor&response_type=token&client_id=NCSOQvOaUTnisD0gvfrfcZrJXlDrp7mM&redirect_uri=https://capstone170204.onrender.com/movies
+- Authentication: Role based authentication is provisioned.
 
 ### Error Handling
 Errors are returned as JSON objects in the following format:
@@ -25,327 +26,187 @@ Errors are returned as JSON objects in the following format:
 The API will return three error types when requests fail:
 - 400: Bad Request
 - 404: Resource Not Found
+- 405: method not allowed
 - 422: Not Processable 
+- AuthError 
 
 ### Endpoints 
-#### GET /categories
+#### GET /movies
 - General:
-    - Returns a list of categories, success value
-- Sample: `curl http://127.0.0.1:5000/categories`
+    - Returns a list of movies, success value, total movies.
+    - The movies are listed 10 per page
+- Sample: `curl https://capstone170204.onrender.com/movies`
+- With Authorization: `Curl https://capstone170204.onrender.com/movies -H "Accept: application/json" -H "Authorization: Bearer {token}"`
 
 ``` {
-        "categories": {
-            "1": "Science",
-            "2": "Art",
-            "3": "Geography",
-            "4": "History",
-            "5": "Entertainment",
-            "6": "Sports"
-        },
-        "success": true
+  "movies": [
+    {
+      "id": 1,
+      "release_date": "Fri, 28 Apr 2023 00:00:00 GMT",
+      "title": "PS2"
     }
+  ],
+  "success": true,
+  "total_movies": 1
+}
 ```
 
-#### GET /questions
+#### GET /actors
 - General:
-    - Returns a list of questions, success value, total questions and list of categories.
-    - The questions are listed 10 per page
-- Sample: `curl http://127.0.0.1:5000/questions`
+    - Returns a list of actors, success value, total actors.
+    - The actors are listed 10 per page
+- Sample: `curl https://capstone170204.onrender.com/actors`
+- With Authorization: `Curl https://capstone170204.onrender.com/actors -H "Accept: application/json" -H "Authorization: Bearer {token}"`
 
 ``` {
-  "categories": {
-    "1": "Science",
-    "2": "Art",
-    "3": "Geography",
-    "4": "History",
-    "5": "Entertainment",
-    "6": "Sports"
-  },
-  "current category": 1,
-  "questions": [
+  "actors": [
     {
-      "answer": "Apollo 13",
-      "category": 5,
-      "difficulty": 4,
-      "id": 2,
-      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
-    },
-    {
-      "answer": "Tom Cruise",
-      "category": 5,
-      "difficulty": 4,
-      "id": 4,
-      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
-    },
-    {
-      "answer": "Edward Scissorhands",
-      "category": 5,
-      "difficulty": 3,
-      "id": 6,
-      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
-    },
-    {
-      "answer": "Muhammad Ali",
-      "category": 4,
-      "difficulty": 1,
-      "id": 9,
-      "question": "What boxer's original name is Cassius Clay?"
-    },
-    {
-      "answer": "Brazil",
-      "category": 6,
-      "difficulty": 3,
-      "id": 10,
-      "question": "Which is the only team to play in every soccer World Cup tournament?"
-    },
-    {
-      "answer": "Uruguay",
-      "category": 6,
-      "difficulty": 4,
-      "id": 11,
-      "question": "Which country won the first ever soccer World Cup in 1930?"
-    },
-    {
-      "answer": "George Washington Carver",
-      "category": 4,
-      "difficulty": 2,
-      "id": 12,
-      "question": "Who invented Peanut Butter?"
-    },
-    {
-      "answer": "Lake Victoria",
-      "category": 3,
-      "difficulty": 2,
-      "id": 13,
-      "question": "What is the largest lake in Africa?"
-    },
-    {
-      "answer": "The Palace of Versailles",
-      "category": 3,
-      "difficulty": 3,
-      "id": 14,
-      "question": "In which royal palace would you find the Hall of Mirrors?"
-    },
-    {
-      "answer": "Agra",
-      "category": 3,
-      "difficulty": 2,
-      "id": 15,
-      "question": "The Taj Mahal is located in which Indian city?"
+      "age": 70,
+      "gend": "M",
+      "id": 1,
+      "name": "RajiniKanth"
     }
   ],
   "success": true,
-  "total_questions": 23
+  "total_actors": 1
 }
 ```
-#### GET /questions?page={pageno}
+#### POST /movies
 
 - General:
-    - Returns the questions from the page specified
-    - Returns a list of questions, success value, total questions and list of categories.
-
-- Sample: `curl http://127.0.0.1:5000/questions?page=2`
+    - Adds a movie using the movie title and release date.
+    - Returns success value and title of the created movie.
+- Sample: `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer {token}" -d "{\"title\":\"NeverWhere\",\"release_date\":\"2023-06-01\"}" https://capstone170204.onrender.com/movies`
 
 ```{
-  "categories": {
-    "1": "Science",
-    "2": "Art",
-    "3": "Geography",
-    "4": "History",
-    "5": "Entertainment",
-    "6": "Sports"
-  },
-  "current category": 1,
-  "questions": [
-    {
-      "answer": "Mona Lisa",
-      "category": 2,
-      "difficulty": 3,
-      "id": 17,
-      "question": "La Giaconda is better known as what?"
-    },
-    {
-      "answer": "One",
-      "category": 2,
-      "difficulty": 4,
-      "id": 18,
-      "question": "How many paintings did Van Gogh sell in his lifetime?"
-    },
-    {
-      "answer": "The Liver",
-      "category": 1,
-      "difficulty": 4,
-      "id": 20,
-      "question": "What is the heaviest organ in the human body?"
-    },
-    {
-      "answer": "Alexander Fleming",
-      "category": 1,
-      "difficulty": 3,
-      "id": 21,
-      "question": "Who discovered penicillin?"
-    },
-    {
-      "answer": "Blood",
-      "category": 1,
-      "difficulty": 4,
-      "id": 22,
-      "question": "Hematology is a branch of medicine involving the study of what?"
-    },
-    {
-      "answer": "Scarab",
-      "category": 4,
-      "difficulty": 4,
-      "id": 23,
-      "question": "Which dung beetle was worshipped by the ancient Egyptians?"
-    },
-    {
-      "answer": "Seven",
-      "category": 4,
-      "difficulty": 1,
-      "id": 25,
-      "question": "How many wonders are there in the world?"
-    },
-    {
-      "answer": "white",
-      "category": 1,
-      "difficulty": 1,
-      "id": 29,
-      "question": "What is the blood color for cockroach"
-    },
-    {
-      "answer": "V.Ramakrishnan",
-      "category": 1,
-      "difficulty": 1,
-      "id": 31,
-      "question": "Who is the Indian Scientist won Nobel prize in 2009?"
-    },
-    {
-      "answer": "8",
-      "category": 1,
-      "difficulty": 1,
-      "id": 33,
-      "question": "how many legs for spider?"
-    }
-  ],
-  "success": true,
-  "total_questions": 23
-}
+  "created":4,
+  "success":true,
+  "title":"NeverWhere"
+  }
 ```
+#### POST /actors
 
-#### GET /categories/{category_id}/questions
 - General:
-    - Returns a list of questions for the selected category, success value, total questions and category id of the selected category.
-- Sample: `curl http://127.0.0.1:5000/categories/3/questions`
+    - Adds an actor using the actor name, age and gender.
+    - Returns success value and name of the created actor.
+- Sample: `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer {token}" -d "{\"name\":\"Karthi\",\"age\":42,\"gender\":\"M\"}" https://capstone170204.onrender.com/actors`
 
 ```{
-  "currentCategory": 3,
-  "questions": [
-    {
-      "answer": "Lake Victoria",
-      "category": 3,
-      "difficulty": 2,
-      "id": 13,
-      "question": "What is the largest lake in Africa?"
-    },
-    {
-      "answer": "The Palace of Versailles",
-      "category": 3,
-      "difficulty": 3,
-      "id": 14,
-      "question": "In which royal palace would you find the Hall of Mirrors?"
-    },
-    {
-      "answer": "Agra",
-      "category": 3,
-      "difficulty": 2,
-      "id": 15,
-      "question": "The Taj Mahal is located in which Indian city?"
-    }
-  ],
-  "success": true,
-  "totalQuestions": 3
+  "actor name":"Karthi",
+  "created":6,
+  "success":true
 }
 ```
-#### DELETE /questions/{quesion_id}
+#### POST /actors
+
 - General:
-    - Delete the question which matches the given question_id if it exists and returns success value
-    - If the question_id doesn't exists, returns 404 resource not found error.
-- Sample: `curl -X DELETE "http://127.0.0.1:5000/questions/5"`
+    - Adds an actor using the actor name, age and gender.
+    - Returns success value and name of the created actor.
+- Sample: `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer {token}" -d "{\"name\":\"Karthi\",\"age\":42,\"gender\":\"M\"}" https://capstone170204.onrender.com/actors`
 
 ```{
-  "success": true
+  "actor name":"Karthi",
+  "created":6,
+  "success":true
 }
 ```
-#### POST /questions
+#### POST /movieactors
+
 - General:
-    - Creates a new question using the question, answer, difficulty and category.
-    - Returns success value and id of the created question
-- Sample: `curl -X POST -H "Content-Type: application/json" -d "{\"question\":\"Who is the discoverer of hydrogen?\",\"answer\":\"Cavendish\",\"difficulty\":\"2\",\"category\":\"4\"}" http://127.0.0.1:5000/questions`
+    - Actors are mapped to movies.
+    - Returns success value, actor and movie information.
+- Sample: `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer {token}" -d "{\"movie_id\":4,\"actor_id\":6}" https://capstone170204.onrender.com/movieactors`
 
 ```{
-  "created": 36,
-  "success": true
+    "Actor in the movie": [
+        {
+            "age": 42,
+            "gend": "M",
+            "id": 6,
+            "name": "Karthi"
+        }
+    ],
+    "Movie details": [
+        {
+            "id": 4,
+            "release_date": "Thu, 01 Jun 2023 00:00:00 GMT",
+            "title": "NeverWhere"
+        }
+    ],
+    "success": true
 }
 ```
-#### POST /questionsearch
+#### PATCH /actors/<actor-id>
+
 - General:
-    - Search all the questions containing the given search term.
-    - Returns a list of questions containing the given search term, success value, total questions and category id as None.
-- Sample: `curl -X POST -H "Content-Type: application/json" -d "{\"searchTerm\":\"Who\"}" http://127.0.0.1:5000/questionsearch`
+    - Updates the actor information with the actor age and gender.
+    - Returns success value and information of the updated actor.
+- Sample: `curl -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer {token}" -d "{\"age\": 50}" https://capstone170204.onrender.com/actors/2`
 
 ```{
-  "currentCategory": null,
-  "questions": [
-    {
-      "answer": "George Washington Carver",
-      "category": 4,
-      "difficulty": 2,
-      "id": 12,
-      "question": "Who invented Peanut Butter?"
-    },
-    {
-      "answer": "Alexander Fleming",
-      "category": 1,
-      "difficulty": 3,
-      "id": 21,
-      "question": "Who discovered penicillin?"
-    },
-    {
-      "answer": "V.Ramakrishnan",
-      "category": 1,
-      "difficulty": 1,
-      "id": 31,
-      "question": "Who is the Indian Scientist won Nobel prize in 2009?"
-    },
-    {
-      "answer": "Cavendish",
-      "category": 4,
-      "difficulty": 2,
-      "id": 36,
-      "question": "Who is the discoverer of hydrogen?"
-    }
-  ],
-  "success": true,
-  "totalQuestions": 4
+    "Updated details": [
+        {
+            "age": 50,
+            "gend": "M",
+            "id": 2,
+            "name": "Surya"
+        }
+    ],
+    "success": true
 }
 ```
-#### POST /quizzes
+#### PATCH /movies/<movie-id>
+
 - General:
-    - List a random question which is not a previously displayed question.
-    - Gets previous quesion ID and category selected
-    - Returns a question and success value
-- Sample: `Curl -X POST -H "Content-Type: application/json" -d  "{\"previous_questions\":\"3\",\"quiz_category\": {\"type\": \"click\",\"id\":0}}"  http://127.0.0.1:5000/quizzes`
+    - Updates the movie information with the release date.
+    - Returns success value and information of the updated movie.
+- Sample: `curl -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer {token}" -d "{\"reldate\": \"2023-10-23\"}" https://capstone170204.onrender.com/movies/4`
 
 ```{
-  "question": {
-    "answer": "Alexander Fleming",
-    "category": 1,
-    "difficulty": 3,
-    "id": 21,
-    "question": "Who discovered penicillin?"
-  },
-  "success": true
+    "Updated details": [
+        {
+            "id": 4,
+            "release_date": "Mon, 23 Oct 2023 00:00:00 GMT",
+            "title": "NeverWhere"
+        }
+    ],
+    "success": true
 }
 ```
-> View the [Frontend README](./frontend/README.md) for more details.
+#### DELETE /movies/<movie-id>
+
+- General:
+    - Delete the movie 
+    - Returns success value and information of the deleted movie.
+- Sample: `curl -X DELETE -H "Authorization: Bearer {token}" https://capstone170204.onrender.com/movies/3`
+
+```{
+    "deleted movie": [
+        {
+            "id": 3,
+            "release_date": "Mon, 19 Dec 2022 00:00:00 GMT",
+            "title": "KGF-2"
+        }
+    ],
+    "success": true
+}
+```
+#### DELETE /actors/<actor-id>
+
+- General:
+    - Delete the actor 
+    - Returns success value and information of the deleted actor.
+- Sample: `curl -X DELETE -H "Authorization: Bearer {token}" https://capstone170204.onrender.com/actors/1`
+
+```{
+    "deleted actor": [
+        {
+            "age": 70,
+            "gend": "M",
+            "id": 1,
+            "name": "Rajini"
+        }
+    ],
+    "success": true
+}
+```
