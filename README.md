@@ -12,7 +12,14 @@ Executive Producer - All permissions a Casting Director has and Add or delete a 
 ### Getting Started
 - Base URL: This app is hosted in render and below is the URL.
 https://capstone170204.us.auth0.com/authorize?audience=MovieActor&response_type=token&client_id=NCSOQvOaUTnisD0gvfrfcZrJXlDrp7mM&redirect_uri=https://capstone170204.onrender.com/movies
+
 - Authentication: Role based authentication is provisioned.
+- Authenication Set up:
+  Create an API in AUTH0 with the below information and create the roles mentioned above
+    export AUTH0_DOMAIN="XXXXXXXXX.auth0.com" # Choose your tenant domain
+    export ALGORITHMS="RS256"
+    export API_AUDIENCE="MovieActor"
+  Add the above in setup.sh file
 
 ### Error Handling
 Errors are returned as JSON objects in the following format:
