@@ -34,7 +34,7 @@ Base class for common methods
 class crudmethods(db.Model):
     __abstract__ = True
 
-        def insert(self):
+    def insert(self):
         db.session.add(self)
         db.session.commit()
 
@@ -134,7 +134,7 @@ class Actor(crudmethods):
         self.age = age
         self.gend = gend
 
-    def insert(self):
+    # def insert(self):
     #     db.session.add(self)
     #     db.session.commit()
 
