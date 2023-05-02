@@ -29,19 +29,12 @@ def setup_db(app, database_path=database_path):
     db.create_all()
 
 """
-Movie_actor
+Base class for common methods
 """
-class Movie_actor(db.Model):
-    __tablename__ = "movie_actor"
-    id = db.Column(db.Integer, primary_key=True)
-    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
-    actor_id = db.Column(db.Integer, db.ForeignKey('actors.id'), nullable=False)
+class crudmethods(db.Model):
+    __abstract__ = True
 
-    def __init__(self, movie_id, actor_id):
-        self.movie_id = movie_id
-        self.actor_id = actor_id
-
-    def insert(self):
+        def insert(self):
         db.session.add(self)
         db.session.commit()
 
@@ -51,6 +44,32 @@ class Movie_actor(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+
+"""
+Movie_actor
+"""
+@dataclass
+class Movie_actor(crudmethods):
+    __tablename__ = "movie_actor"
+    id = db.Column(db.Integer, primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
+    actor_id = db.Column(db.Integer, db.ForeignKey('actors.id'), nullable=False)
+
+    def __init__(self, movie_id, actor_id):
+        self.movie_id = movie_id
+        self.actor_id = actor_id
+
+    # def insert(self):
+    #     db.session.add(self)
+    #     db.session.commit()
+
+    # def update(self):
+    #     db.session.commit()
+
+    # def delete(self):
+    #     db.session.delete(self)
+    #     db.session.commit()
 
     def format(self):
         return {
@@ -63,7 +82,7 @@ class Movie_actor(db.Model):
 Movie
 
 """
-class Movie(db.Model):
+class Movie(crudmethods):
     __tablename__ = 'movies'
 
     # id = Column(Integer, primary_key=True)
@@ -79,16 +98,16 @@ class Movie(db.Model):
         self.title = title
         self.release_date = release_date
 
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
+    # def insert(self):
+    #     db.session.add(self)
+    #     db.session.commit()
 
-    def update(self):
-        db.session.commit()
+    # def update(self):
+    #     db.session.commit()
 
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+    # def delete(self):
+    #     db.session.delete(self)
+    #     db.session.commit()
 
     def format(self):
         return {
@@ -101,7 +120,7 @@ class Movie(db.Model):
 Actor
 
 """
-class Actor(db.Model):
+class Actor(crudmethods):
     __tablename__ = 'actors'
 
     id = Column(Integer, primary_key=True)
@@ -116,15 +135,15 @@ class Actor(db.Model):
         self.gend = gend
 
     def insert(self):
-        db.session.add(self)
-        db.session.commit()
+    #     db.session.add(self)
+    #     db.session.commit()
 
-    def update(self):
-        db.session.commit()
+    # def update(self):
+    #     db.session.commit()
 
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+    # def delete(self):
+    #     db.session.delete(self)
+    #     db.session.commit()
 
     def format(self):
         return {

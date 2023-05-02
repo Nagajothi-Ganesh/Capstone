@@ -2,12 +2,16 @@
 
 ## Filmopedia App
 
+### Introduction  
 Flimopedia is a casting agency that is responsible for creating movies and managing and assigning actors to those movies. This app is used to maintain the data of movies and the actors.
 
 Roles:
 Any one or Casting Assistant - Can view actors and movies
 Casting Director - All permissions a Casting Assistant has and Add or delete an actor from the database, Modify actors or movies
 Executive Producer - All permissions a Casting Director has and Add or delete a movie from the database
+
+### Motivation
+This project is for practicing the skills learned as part of full stack web developer course. This includes using database modeling (PostgreSQL), REST API (CRUD operations), Authentication (JWT tokens) and hosting the app in render.
 
 ### Getting Started
 - Base URL: This app is hosted in render and below is the URL.
@@ -21,6 +25,29 @@ https://capstone170204.us.auth0.com/authorize?audience=MovieActor&response_type=
     export API_AUDIENCE="MovieActor"
   Add the above in setup.sh file
 
+To run the project locally, clone the project and navigate in git command line to the project folder.
+1. Create a virtual environment and activate it.
+    $ python -m virtualenv <name>
+    $ source <name>/Scripts/activate
+2. Install the dependencies.
+    $ pip install -r requirements.txt
+3. Create an account in Auth0 and create an API.
+4. Create the above mentioned roles and users. Assign roles to the users.
+5. Change the database URL in the .env file to point to your database.
+6. Change the setup file to update the Auth0 account details.
+7. Run the API
+    $ export FLASK_APP=api.py
+    $ flask run --reload
+
+To run in render,
+1. Clone the project to your git hub account.
+2. Create an account in Render.
+3. Create a PostgreSQL database and a web service.
+4. Add environment variables to include the database URL and AUTH0 details.
+5. Connect the git hub repository in the web service.
+6. Deployment will auto trigger and the application will go live.
+7. Access the application using the URL provided by the render.
+   
 ### Error Handling
 Errors are returned as JSON objects in the following format:
 ```

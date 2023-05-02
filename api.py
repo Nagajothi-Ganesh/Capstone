@@ -4,7 +4,13 @@ Backend program for Capstone
 import os
 from werkzeug.http import HTTP_STATUS_CODES
 
-from flask import Flask, request, abort, jsonify, abort
+from flask import (
+    Flask, 
+    request, 
+    abort, 
+    jsonify, 
+    abort
+)
 from sqlalchemy import exc
 import json
 from flask_cors import CORS
@@ -14,26 +20,31 @@ from auth.auth import AuthError, requires_auth
 
 MOVIES_PER_PAGE = 10
 
-
-# def create_app(test_config=None):
-#     # create and configure the app
-
 app = Flask(__name__)
 setup_db(app)
 CORS(app)
 
-    # @app.after_request
-    # def after_request(response):
-    #     response.headers.add(
-    #         "Access-Control-Allow-Headers", "Content-Type,Authorization,true"
-    #     )
-    #     response.headers.add(
-    #         "Access-Control-Allow-Methods", "GET,PATCH,POST,DELETE,OPTIONS"
-    #     )
-    #     return response
+@app.after_request
+def after_request(response):
+    response.headers.add(
+        "Access-Control-Allow-Headers", "Content-Type,Authorization,true"
+    )
+    response.headers.add(
+        "Access-Control-Allow-Methods", "GET,PATCH,POST,DELETE,OPTIONS"
+    )
+    return response
+
+"""
+Default Welcome Page
+"""
+
+@app.route('/')
+def welcome():
+    return "Welcome to Flimopedia casting agency!!!"
 
 """
 List actors
+Get all the actors information and list them
 """
 
 @app.route("/actors", methods=["GET"])
@@ -58,6 +69,7 @@ def retrieve_actors():
 
 """
 List Movies
+Get all the movies information and list them
 """
 @app.route("/movies", methods=["GET"])
 # @requires_auth('get:movies')
@@ -80,6 +92,8 @@ def retrieve_movies():
         abort(404)
 """
 Delete Movie
+Parameter: movie_id
+Deletes the movie information of the passed movie_id
 """
 @app.route("/movies/<int:movie_id>", methods=["DELETE"])
 @requires_auth('delete:movies')
@@ -102,6 +116,8 @@ def delete_movie(payload,movie_id):
 
 """
 Delete Actor
+Parameter: actor_id
+Deletes actor details of the passed actor_id
 """
 @app.route("/actors/<int:actor_id>", methods=["DELETE"])
 @requires_auth('delete:actors')
@@ -124,14 +140,16 @@ def delete_actor(payload,actor_id):
 
 """
 Post movies
+Parameter: title, release date
+Adds the movie information to the movies table
 """
 @app.route("/movies", methods=["POST"])
 @requires_auth('post:movies')
 def add_movies(payload):
 
     body = request.get_json()
-    new_title = body.get("title", None)
-    new_releasedt = body.get("release_date", None)
+    new_title = body.get("title")
+    new_releasedt = body.get("release_date")
 
     try:
         if (new_title is None):
@@ -154,15 +172,17 @@ def add_movies(payload):
 
 """
 Post actors
+Parameter: name, age, gender
+Adds the actor informaiton to the actors table
 """
 @app.route("/actors", methods=["POST"])
 @requires_auth('post:actors')
 def add_actors(payload):
 
     body = request.get_json()
-    new_name = body.get("name", None)
-    new_age = body.get("age", None)
-    new_gender = body.get("gender", None)
+    new_name = body.get("name")
+    new_age = body.get("age")
+    new_gender = body.get("gender")
 
     try:
         if (new_name is None):
@@ -185,6 +205,8 @@ def add_actors(payload):
 
 """
 Update actors information
+Parameter: actor_id, age, gender
+Updates the existing actor information with the passed parameters
 """
 @app.route("/actors/<int:actor_id>", methods=["PATCH"])
 @requires_auth('patch:actors')
@@ -192,8 +214,8 @@ def patch_drinks(payload,actor_id):
     try:
 
         body = request.get_json()
-        new_age = body.get("age", None)
-        new_gender = body.get("gender", None)
+        new_age = body.get("age")
+        new_gender = body.get("gender")
                     
         actor = Actor.query.filter(Actor.id==actor_id).one_or_none()
         if actor:
@@ -215,6 +237,8 @@ def patch_drinks(payload,actor_id):
 
 """
 Update movies information
+Parameter: movie_id, release date
+Updates the existing movie information with the passed parameters
 """
 @app.route("/movies/<int:movie_id>", methods=["PATCH"])
 @requires_auth('patch:movies')
@@ -222,7 +246,7 @@ def patch_movies(payload,movie_id):
     try:
 
         body = request.get_json()
-        new_rdate = body.get("reldate", None)
+        new_rdate = body.get("reldate")
                     
         movie = Movie.query.filter(Movie.id==movie_id).one_or_none()
         if movie:
@@ -242,13 +266,15 @@ def patch_movies(payload,movie_id):
 
 """
 Update movies_actor information
+Parameter: movie_id, actor_id
+Inserts the relationship of the movie and actor in the movie_actor table
 """
 @app.route("/movieactors", methods=["POST"])
 @requires_auth('post:movieactors')
 def movie_actor(payload):
     body = request.get_json()
-    new_movieid = body.get("movie_id", None)
-    new_actorid = body.get("actor_id", None)
+    new_movieid = body.get("movie_id")
+    new_actorid = body.get("actor_id")
 
     try:
         if (new_movieid is None or new_actorid is None):
