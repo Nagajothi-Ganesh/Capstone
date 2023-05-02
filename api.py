@@ -37,8 +37,8 @@ List actors
 """
 
 @app.route("/actors", methods=["GET"])
-@requires_auth('get:actors')
-def retrieve_actors(payload):
+# @requires_auth('get:actors')
+def retrieve_actors():
     try:
         selection = Actor.query.order_by(Actor.id).paginate(per_page=MOVIES_PER_PAGE)
         actors = [actor.format() for actor in selection.items]
@@ -60,8 +60,8 @@ def retrieve_actors(payload):
 List Movies
 """
 @app.route("/movies", methods=["GET"])
-@requires_auth('get:movies')
-def retrieve_movies(payload):
+# @requires_auth('get:movies')
+def retrieve_movies():
     try:
         selection = Movie.query.order_by(Movie.id).paginate(per_page=MOVIES_PER_PAGE)
         movies = [movie.format() for movie in selection.items]
